@@ -1,83 +1,47 @@
-class UnionFind {
-  public:
-    int count;
-    vector<int>root;
-    vector<int>rank;
-    UnionFind(int n){
-        count = n;
-        root = vector<int>(n);
-        rank = vector<int>(n);
-        
-        for(int i=0; i<n; i++){
-            root[i]=i;
-            rank[i]=1;
-        }
-    }
-    
-    void unionset(int x, int y){
-        int rootx=find(x);
-        int rooty = find(y);
-        if(rootx!=rooty){
-             if(rank[rootx]>rank[rooty])
-                root[rooty]=rootx;
-             else if(rank[rooty]>rank[rootx])
-                root[rootx]=rooty;
-            else{
-                root[rooty] = rootx;
-                rank[rootx]++;
-            }
-            count--;
-        }
-    }
-    
-    int find(int x){
-       if(x == root[x])
-           return root[x];
-       return root[x] =find(root[x]); 
-    }
-    
-};
-
-
 class Solution {
 public:
+    
+    void dfs( vector<vector<int>>&adj, vector<int>&path, vector<int>&vis, int st){
+        path.push_back(st);
+        vis[st] = true;
+        for(auto x: adj[st]){
+            if(!vis[x]){
+                dfs(adj, path, vis, x);
+            }
+        }
+    }
+    
     string smallestStringWithSwaps(string s, vector<vector<int>>& pairs) {
         int n = s.size();
-        if(pairs.size()==0){
-            return s;
+        vector<vector<int>>adj(s.size());
+        
+        for(auto x : pairs){
+            adj[x[0]].push_back(x[1]);
+            adj[x[1]].push_back(x[0]);
         }
         
-        UnionFind uf(n);
+        vector<int>vis(n, 0);
         
-        for(auto x: pairs){
-            uf.unionset(x[0], x[1]);
-        }
-        
-        map<int, string>mp;            //map stores chars with same parent root at same idx
         for(int i = 0; i<n; i++){
-            int root = uf.find(i);
-            uf.root[i] = root;
-            mp[root]+=s[i];
+           
+            if(!vis[i]){
+                vector<int>path;
+                dfs(adj, path, vis, i);
+                
+                string t ="";
+                for(auto x: path){
+                    t+=s[x];
+                }
+                sort(path.begin(), path.end());
+                sort(t.begin(), t.end());
+                int j = 0;
+                
+                for(auto x: path){
+                    s[x]=t[j];
+                    j++;
+                }
+            }
         }
-        
-        if(uf.count==1){
-            sort(s.begin(), s.end());
-            return s;
-        }
-        
-        for(auto x: mp){
-            int i = x.first;            //sort string at each idx in map in desc order
-            string s = x.second;
-            sort(s.begin(), s.end(), greater<char>());
-            mp[i] = s;
-        }
-        
-        for(int i = 0; i<n; i++){          //find root of ith element to find char from map
-            int root = uf.find(i);           //change org string by taking element from map
-            s[i] = mp[root].back();
-            mp[root].pop_back();
-        }
-        
         return s;
     }
 };
