@@ -2,23 +2,27 @@ class Solution {
 public:
     int candy(vector<int>& ratings) {
         int n = ratings.size();
-        vector<int>c(n, 1);
-    
+        if(n==0)
+            return 0;
+        int ret = 1;
+        int up = 0, down =0, peak = 0;
         for(int i = 1; i<n; i++){
-            if(ratings[i]>ratings[i-1]){
-                c[i] = c[i-1]+1;
+            if(ratings[i-1] < ratings[i]){
+                up++;
+                peak = up;
+                down = 0;
+                ret+=1+up;
+            }
+            else if(ratings[i-1] == ratings[i]){
+                peak = up = down = 0;
+                ret+=1;
+            }
+            else{
+                down++;
+                up = 0;
+                ret+=1+down + (peak>=down ? -1:0);
             }
         }
-        for(int i = n-1; i>0; i--){
-            if(ratings[i]<ratings[i-1]){
-                c[i-1] = max(c[i]+1, c[i-1]);
-            }
-        }
-        int sum = 0;
-        for(int i = 0; i<n; i++){
-            sum+=c[i];
-        }
-        
-        return sum;
+        return ret;
     }
 };
