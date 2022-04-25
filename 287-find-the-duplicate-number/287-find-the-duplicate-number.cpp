@@ -2,14 +2,14 @@ class Solution {
 public:
     int findDuplicate(vector<int>& nums) {
         int slow = nums[0], fast = nums[0];
-        do{                                                     //move slow by 1, fast by 2
-            slow = nums[slow];
-            fast = nums[nums[fast]];
+        do{
+            slow = nums[slow]; //1 3 2
+            fast = nums[nums[fast]]; //2 4 2
+                
         }
         while(slow!=fast);
         
-        fast = nums[0];                              //move slow and fast by 1, 
-                                                       // 2nd collision at duplicate
+        fast = nums[0];
         while(slow!=fast){
             slow = nums[slow];
             fast = nums[fast];
