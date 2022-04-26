@@ -1,32 +1,28 @@
-class Solution {
-public:
-    int minCostConnectPoints(vector<vector<int>>& points) {
-        int n = points.size();
+class Solution:
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        n = len(points)
         
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-        vector<bool>vis(n);
+        heap = [(0, 0)]
+        in_mst = [False] * n
         
-        pq.push({0, 0});
-        int mst = 0;
-        int used = 0;
+        mst_cost = 0
+        edges_used = 0
         
-        while(used < n){
-            auto t = pq.top();
-            pq.pop();
-            int wt = t.first;
-            int curr = t.second;
+        while edges_used < n:
+            weight, curr_node = heapq.heappop(heap)
             
-            if(vis[curr])
-                continue;
+            if in_mst[curr_node]:
+                continue
             
-            vis[curr] = true;
-            mst+=wt;
-            used++;
+            in_mst[curr_node] = True
+            mst_cost += weight
+            edges_used += 1
             
-           for(int i = 1; i<n; i++){
-               pq.push({abs(points[curr][0]-points[i][0]) + abs(points[curr][1]-points[i][1]), i});
-           }
-        }
-        return mst;
-    }
-};
+            for next_node in range(n):
+                if not in_mst[next_node]:
+                    next_weight = abs(points[curr_node][0] - points[next_node][0]) +\
+                                  abs(points[curr_node][1] - points[next_node][1])
+                    
+                    heapq.heappush(heap, (next_weight, next_node))
+                    
+        return mst_cost
