@@ -20,8 +20,7 @@ class Solution:
             
             for next_node in range(n):
                 if not in_mst[next_node]:
-                    next_weight = abs(points[curr_node][0] - points[next_node][0]) +\
-                                  abs(points[curr_node][1] - points[next_node][1])
+                    next_weight = abs(points[curr_node][0] - points[next_node][0]) +abs(points[curr_node][1] - points[next_node][1])
                     
                     heapq.heappush(heap, (next_weight, next_node))
                     
