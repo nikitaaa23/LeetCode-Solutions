@@ -14,9 +14,13 @@ public:
         }
        
         while(!pq.empty() && k--){
+            cout<<pq.top().second<<" ";
             ans.push_back(pq.top().second);
             pq.pop();
         }
         return ans;
     }
 };
+//1-3
+//2-2
+//3-1
