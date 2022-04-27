@@ -1,44 +1,38 @@
 class Solution {
 public:
     
-    void dfs( vector<vector<int>>&adj, vector<int>&path, vector<int>&vis, int st){
-        path.push_back(st);
-        vis[st] = true;
-        for(auto x: adj[st]){
-            if(!vis[x]){
-                dfs(adj, path, vis, x);
-            }
+    bool vis[100001];
+    vector<int>adj[100001];
+    void dfs(string &s, int i, vector<char>&chars,vector<int>&idx){
+        chars.push_back(s[i]);
+        idx.push_back(i);
+        vis[i] = true;
+        
+        for(auto x: adj[i]){
+            if(!vis[x])
+                dfs(s, x, chars, idx);
         }
     }
-    
     string smallestStringWithSwaps(string s, vector<vector<int>>& pairs) {
         int n = s.size();
-        vector<vector<int>>adj(s.size());
+        
         
         for(auto x : pairs){
             adj[x[0]].push_back(x[1]);
             adj[x[1]].push_back(x[0]);
         }
-        
-        vector<int>vis(n, 0);
-        
+       
         for(int i = 0; i<n; i++){
-           
             if(!vis[i]){
-                vector<int>path;
-                dfs(adj, path, vis, i);
+                vector<char>chars;
+                vector<int>idx;
                 
-                string t ="";
-                for(auto x: path){
-                    t+=s[x];
-                }
-                sort(path.begin(), path.end());
-                sort(t.begin(), t.end());
-                int j = 0;
+                dfs(s, i, chars, idx);
+                sort(chars.begin(), chars.end());
+                sort(idx.begin(), idx.end());
                 
-                for(auto x: path){
-                    s[x]=t[j];
-                    j++;
+                for(int j = 0; j<chars.size(); j++){
+                    s[idx[j]] = chars[j];
                 }
             }
         }
