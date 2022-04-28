@@ -1,26 +1,26 @@
 class FreqStack {
 public:
     map<int, int>mp;
-    map<int, stack<int>>gp;
-    int mxF = 0;
+    map<int, stack<int>>st;
+    int mF =0 ;
     FreqStack() {
+        
     }
     
     void push(int val) {
-        mp[val]++;
-        gp[mp[val]].push(val);
-        mxF = max(mxF, mp[val]);
+        mp[val]++; //5-2 7-1 
+        mF=max(mF, mp[val]);
+        st[mp[val]].push(val); //1-5,7,4  2-5,7 3-5
     }
     
     int pop() {
-        int tp = gp[mxF].top();
-        gp[mxF].pop();
-        mp[tp]--;
+        int x = st[mF].top();
+        st[mF].pop();
+        mp[x]--;
         
-        if(gp[mxF].empty())
-			mxF--;
-
-		return tp;
+        if(st[mF].empty())
+            mF--;
+        return x;
     }
 };
 
